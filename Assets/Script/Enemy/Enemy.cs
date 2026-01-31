@@ -4,26 +4,20 @@ using System.Collections;
 
 public class Enemy : MonoBehaviour
 {
-    [Header("Components")]
     private NavMeshAgent agent;
     private Transform player;
 
-    [Header("Patrol Settings")]
     [SerializeField] private Transform[] patrolPoints;
     [SerializeField] private float patrolWaitTime = 2f;
     [SerializeField] private float patrolSpeed = 2f;
     private int currentPatrolIndex;
     private bool isWaiting;
 
-    [Header("Chase Settings")]
     [SerializeField] private float detectionRange = 10f;
     [SerializeField] private float chaseSpeed = 5f;
     private bool isChasing;
 
-    [Header("Attack Settings")]
-    [SerializeField] private int damageToPlayer = 10;
-    [SerializeField] private float attackCooldown = 1f;
-    private float lastAttackTime;
+    private bool hasHitPlayer = false; // <--- flag supaya cuma hit 1x
 
     private void Start()
     {
@@ -50,7 +44,6 @@ public class Enemy : MonoBehaviour
 
         float distance = Vector3.Distance(transform.position, player.position);
 
-        // ===== CHASE =====
         if (distance <= detectionRange)
         {
             if (!isChasing)
@@ -60,7 +53,6 @@ public class Enemy : MonoBehaviour
             }
             agent.SetDestination(player.position);
         }
-        // ===== PATROL =====
         else
         {
             if (isChasing)
@@ -103,22 +95,20 @@ public class Enemy : MonoBehaviour
         SetNextPatrolDestination();
     }
 
-    // ===== DAMAGE KE PLAYER =====
-    private void OnCollisionStay(Collision collision)
+    // ===== SENTUH PLAYER → DAMAGE + ENEMY HANCUR =====
+    private void OnTriggerEnter(Collider other)
     {
-        if (collision.gameObject.CompareTag("Player"))
-        {
-            if (Time.time - lastAttackTime >= attackCooldown)
-            {
-                lastAttackTime = Time.time;
+        if (hasHitPlayer) return; // <--- hanya hit 1x
+        if (!other.CompareTag("Player")) return;
 
-                PlayerHealth playerHealth = collision.gameObject.GetComponent<PlayerHealth>();
-                if (playerHealth != null)
-                {
-                    playerHealth.TakeDamage(damageToPlayer);
-                }
-            }
+        PlayerHealth playerHealth = other.GetComponent<PlayerHealth>();
+        if (playerHealth != null)
+        {
+            playerHealth.TakeDamage(); // Kurangi 1 nyawa
         }
+
+        hasHitPlayer = true; // tandai sudah hit
+        Destroy(gameObject);
     }
 
     private void OnDrawGizmosSelected()

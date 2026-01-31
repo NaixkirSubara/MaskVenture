@@ -2,27 +2,32 @@ using UnityEngine;
 
 public class PlayerHealth : MonoBehaviour
 {
-    [Header("Health Settings")]
-    public int maxHealth = 100;
-    public int currentHealth;
+    [Header("Lives Settings")]
+    public int maxLives = 3;
+    public int currentLives;
 
     [Header("Damage Feedback")]
     public AudioSource audioSource;
     public AudioClip hitSFX;
 
+    [Header("UI")]
+    public PlayerHealthUI healthUI; // <--- UI reference
+
     private bool isDead = false;
 
     void Start()
     {
-        currentHealth = maxHealth;
+        currentLives = maxLives;
+        if (healthUI != null)
+            healthUI.UpdateLife(currentLives); // Update UI awal
     }
 
-    public void TakeDamage(int damage)
+    public void TakeDamage()
     {
         if (isDead) return;
 
-        currentHealth -= damage;
-        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
+        currentLives -= 1;
+        currentLives = Mathf.Clamp(currentLives, 0, maxLives);
 
         // 🔊 Sound kena damage
         if (audioSource != null && hitSFX != null)
@@ -30,23 +35,20 @@ public class PlayerHealth : MonoBehaviour
             audioSource.PlayOneShot(hitSFX);
         }
 
-        Debug.Log("Player HP: " + currentHealth);
+        // Update UI
+        if (healthUI != null)
+            healthUI.UpdateLife(currentLives);
 
-        // ☠️ Mati
-        if (currentHealth <= 0)
-        {
+        Debug.Log("Player Nyawa: " + currentLives);
+
+        if (currentLives <= 0)
             Die();
-        }
     }
 
     private void Die()
     {
         isDead = true;
         Debug.Log("Player Mati");
-
-        // Contoh opsi:
-        // Time.timeScale = 0f;
-        // tampilkan Game Over UI
-        // disable movement script
+        // Contoh: disable movement, tampilkan GameOver UI, dll
     }
 }
