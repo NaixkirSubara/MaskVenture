@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.InputSystem; // ⬅ WAJIB
+using UnityEngine.InputSystem; //  WAJIB
 
 public class GameManager : MonoBehaviour
 {
