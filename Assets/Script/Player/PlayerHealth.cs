@@ -7,39 +7,44 @@ public class PlayerHealth : MonoBehaviour
     public int currentLives;
 
     [Header("Damage Feedback")]
-    public AudioSource audioSource;
     public AudioClip hitSFX;
 
     [Header("UI")]
-    public PlayerHealthUI healthUI; // <--- UI reference
+    public PlayerHealthUI healthUI;
+    public GameObject gameOverUI; // ⬅️ UI Game Over
+
+    [Header("Player Control")]
+    public MonoBehaviour movementScript; // ⬅️ drag script movement ke sini
 
     private bool isDead = false;
 
     void Start()
     {
         currentLives = maxLives;
+
         if (healthUI != null)
-            healthUI.UpdateLife(currentLives); // Update UI awal
+            healthUI.UpdateLife(currentLives);
+
+        if (gameOverUI != null)
+            gameOverUI.SetActive(false);
     }
 
     public void TakeDamage()
     {
         if (isDead) return;
 
-        currentLives -= 1;
+        currentLives--;
         currentLives = Mathf.Clamp(currentLives, 0, maxLives);
 
-        // 🔊 Sound kena damage
-        if (audioSource != null && hitSFX != null)
+        // 🔊 SFX kena hit
+        if (AudioManager.Instance != null && hitSFX != null)
         {
-            audioSource.PlayOneShot(hitSFX);
+            AudioManager.Instance.PlaySFX(hitSFX);
         }
 
         // Update UI
         if (healthUI != null)
             healthUI.UpdateLife(currentLives);
-
-        Debug.Log("Player Nyawa: " + currentLives);
 
         if (currentLives <= 0)
             Die();
@@ -48,7 +53,19 @@ public class PlayerHealth : MonoBehaviour
     private void Die()
     {
         isDead = true;
+
         Debug.Log("Player Mati");
-        // Contoh: disable movement, tampilkan GameOver UI, dll
+
+        // 🛑 Matikan movement
+        if (movementScript != null)
+            movementScript.enabled = false;
+
+        // 🖥️ Tampilkan Game Over UI
+        if (gameOverUI != null)
+            gameOverUI.SetActive(true);
+
+        // (opsional) unlock cursor kalau FPS
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 }
