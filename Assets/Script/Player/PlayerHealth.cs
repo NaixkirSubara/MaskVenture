@@ -7,10 +7,14 @@ public class PlayerHealth : MonoBehaviour
     public int currentLives;
 
     [Header("Damage Feedback")]
-    public AudioClip hitSFX;   // ⬅️ cukup AudioClip saja
+    public AudioClip hitSFX;
 
     [Header("UI")]
     public PlayerHealthUI healthUI;
+    public GameObject gameOverUI; // ⬅️ UI Game Over
+
+    [Header("Player Control")]
+    public MonoBehaviour movementScript; // ⬅️ drag script movement ke sini
 
     private bool isDead = false;
 
@@ -20,6 +24,9 @@ public class PlayerHealth : MonoBehaviour
 
         if (healthUI != null)
             healthUI.UpdateLife(currentLives);
+
+        if (gameOverUI != null)
+            gameOverUI.SetActive(false);
     }
 
     public void TakeDamage()
@@ -29,7 +36,7 @@ public class PlayerHealth : MonoBehaviour
         currentLives--;
         currentLives = Mathf.Clamp(currentLives, 0, maxLives);
 
-        // Play SFX lewat AudioManager
+        // 🔊 SFX kena hit
         if (AudioManager.Instance != null && hitSFX != null)
         {
             AudioManager.Instance.PlaySFX(hitSFX);
@@ -39,8 +46,6 @@ public class PlayerHealth : MonoBehaviour
         if (healthUI != null)
             healthUI.UpdateLife(currentLives);
 
-        Debug.Log("Player Nyawa: " + currentLives);
-
         if (currentLives <= 0)
             Die();
     }
@@ -48,7 +53,19 @@ public class PlayerHealth : MonoBehaviour
     private void Die()
     {
         isDead = true;
+
         Debug.Log("Player Mati");
-        // disable movement / GameOver UI
+
+        // 🛑 Matikan movement
+        if (movementScript != null)
+            movementScript.enabled = false;
+
+        // 🖥️ Tampilkan Game Over UI
+        if (gameOverUI != null)
+            gameOverUI.SetActive(true);
+
+        // (opsional) unlock cursor kalau FPS
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 }
