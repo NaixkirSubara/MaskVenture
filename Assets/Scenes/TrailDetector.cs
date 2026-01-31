@@ -7,11 +7,11 @@ public class TrailDetector : MonoBehaviour
     [Header("Settings")]
     public bool useDuration = true;
     public float activeDuration = 5.0f;
-    public float safeDistance = 5.0f; // Jarak aman (meter). Jika lebih dekat dari ini, sistem mati.
+    public float safeDistance = 5.0f;
 
     [Header("References")]
     public Transform player;
-    public Transform target;
+    public Transform[] targets;
     public RectTransform arrowUI;
 
     private bool isActive = false;
@@ -28,17 +28,24 @@ public class TrailDetector : MonoBehaviour
 
         if (isActive)
         {
-            // Cek jarak secara real-time saat aktif
-            float currentDistance = Vector3.Distance(player.position, target.position);
+            Transform closestTarget = GetClosestTarget();
 
-            if (currentDistance <= safeDistance)
+            if (closestTarget == null)
             {
-                TurnOff(); // Matikan otomatis jika masuk area aman
-                Debug.Log("Sudah sampai di lokasi aman.");
+                TurnOff();
                 return;
             }
 
-            UpdateArrowRotation();
+            float currentDistance = Vector3.Distance(player.position, closestTarget.position);
+
+            if (currentDistance <= safeDistance)
+            {
+                TurnOff();
+                Debug.Log($"Sudah sampai di lokasi aman: {closestTarget.name}");
+                return;
+            }
+
+            UpdateArrowRotation(closestTarget);
             HandleDuration();
         }
     }
@@ -53,18 +60,52 @@ public class TrailDetector : MonoBehaviour
             }
             else
             {
-                // Cek jarak SEBELUM menyalakan
-                float currentDistance = Vector3.Distance(player.position, target.position);
-                if (currentDistance > safeDistance)
+                // INTEGRASI: Cek Manager sebelum menyalakan
+                if (GlobalAbilityManager.Instance.TryActivateAbility())
                 {
-                    TurnOn();
-                }
-                else
-                {
-                    Debug.Log("Terlalu dekat dengan target, tidak perlu petunjuk.");
+                    Transform closestTarget = GetClosestTarget();
+                    if (closestTarget != null)
+                    {
+                        float currentDistance = Vector3.Distance(player.position, closestTarget.position);
+                        if (currentDistance > safeDistance)
+                        {
+                            TurnOn();
+                        }
+                        else
+                        {
+                            Debug.Log("Terlalu dekat.");
+                            GlobalAbilityManager.Instance.FinishAbility(); // Cancel lock segera
+                        }
+                    }
+                    else
+                    {
+                        Debug.Log("Tidak ada target.");
+                        GlobalAbilityManager.Instance.FinishAbility(); // Cancel lock segera
+                    }
                 }
             }
         }
+    }
+
+    Transform GetClosestTarget()
+    {
+        if (targets == null || targets.Length == 0) return null;
+        Transform bestTarget = null;
+        float closestDistanceSqr = Mathf.Infinity;
+        Vector3 currentPos = player.position;
+
+        foreach (Transform potentialTarget in targets)
+        {
+            if (potentialTarget == null) continue;
+            Vector3 directionToTarget = potentialTarget.position - currentPos;
+            float dSqrToTarget = directionToTarget.sqrMagnitude;
+            if (dSqrToTarget < closestDistanceSqr)
+            {
+                closestDistanceSqr = dSqrToTarget;
+                bestTarget = potentialTarget;
+            }
+        }
+        return bestTarget;
     }
 
     void TurnOn()
@@ -76,17 +117,20 @@ public class TrailDetector : MonoBehaviour
 
     void TurnOff()
     {
+        if (!isActive) return;
+
         isActive = false;
         if (arrowUI != null) arrowUI.gameObject.SetActive(false);
+
+        // INTEGRASI: Lepas kunci
+        GlobalAbilityManager.Instance.FinishAbility();
     }
 
-    void UpdateArrowRotation()
+    void UpdateArrowRotation(Transform currentTarget)
     {
-        if (player == null || target == null || arrowUI == null) return;
-
-        Vector3 directionToTarget = target.position - player.position;
+        if (player == null || currentTarget == null || arrowUI == null) return;
+        Vector3 directionToTarget = currentTarget.position - player.position;
         directionToTarget.y = 0;
-
         float angle = Vector3.SignedAngle(player.forward, directionToTarget, Vector3.up);
         arrowUI.localRotation = Quaternion.Euler(0, 0, -angle);
     }

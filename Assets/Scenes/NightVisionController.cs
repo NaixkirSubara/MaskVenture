@@ -6,8 +6,8 @@ public class NightVisionController : MonoBehaviour
 {
     [Header("Settings")]
     public Light directionalLight;
-    public float activeDuration = 10f; // Durasi menyala setiap kali aktif
-    public float cooldownTime = 5f;    // Waktu tunggu sebelum bisa dipakai lagi
+    public float activeDuration = 10f;
+    public float cooldownTime = 5f;
 
     [Header("Status (Read Only)")]
     public bool isNightVisionActive = false;
@@ -34,16 +34,19 @@ public class NightVisionController : MonoBehaviour
 
     void Update()
     {
-        // 1. Input untuk Mengaktifkan (Hanya bisa jika Ready)
+        // 1. Input untuk Mengaktifkan
         if (Keyboard.current != null && Keyboard.current.qKey.wasPressedThisFrame)
         {
             if (!isNightVisionActive && isReadyToUse)
             {
-                ActivateNightVision();
+                // INTEGRASI: Minta izin ke Manager dulu
+                if (GlobalAbilityManager.Instance.TryActivateAbility())
+                {
+                    ActivateNightVision();
+                }
             }
             else if (isNightVisionActive)
             {
-                // Jika ingin bisa mematikan manual sebelum waktu habis
                 DeactivateNightVision();
             }
         }
@@ -58,14 +61,14 @@ public class NightVisionController : MonoBehaviour
             }
         }
 
-        // 3. Logika Cooldown (Reset Kembali)
+        // 3. Logika Cooldown
         if (!isNightVisionActive && !isReadyToUse)
         {
             timer += Time.deltaTime;
             if (timer >= cooldownTime)
             {
                 isReadyToUse = true;
-                timer = 0; // Reset timer untuk penggunaan berikutnya
+                timer = 0;
                 Debug.Log("Night Vision Ready!");
             }
         }
@@ -75,32 +78,32 @@ public class NightVisionController : MonoBehaviour
     {
         isNightVisionActive = true;
         isReadyToUse = false;
-        timer = activeDuration; // <--- RESET WAKTU KE PENUH
+        timer = activeDuration;
         ApplyVisuals(true);
     }
 
     void DeactivateNightVision()
     {
+        // Cek agar tidak memanggil FinishAbility berkali-kali jika sudah mati
+        if (!isNightVisionActive) return;
+
         isNightVisionActive = false;
-        timer = 0; // Mulai hitung cooldown dari 0
+        timer = 0;
         ApplyVisuals(false);
+
+        // INTEGRASI: Lapor ke Manager bahwa skill sudah selesai
+        GlobalAbilityManager.Instance.FinishAbility();
     }
 
     void ApplyVisuals(bool state)
     {
-        // Toggle Objek Rahasia
         foreach (GameObject go in hiddenObjects)
         {
             if (go != null) go.SetActive(state);
         }
 
-        // Toggle Directional Light
-        if (directionalLight != null)
-        {
-            directionalLight.enabled = !state;
-        }
+        if (directionalLight != null) directionalLight.enabled = !state;
 
-        // Toggle Skybox & Ambient
         if (state)
         {
             RenderSettings.skybox = null;
