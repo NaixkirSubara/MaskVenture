@@ -1,37 +1,46 @@
 using UnityEngine;
 using System.Collections.Generic;
-using UnityEngine.InputSystem; // WAJIB: Tambahkan namespace ini
+using UnityEngine.InputSystem;
 
 public class NightVisionController : MonoBehaviour
 {
-    // Kita tidak butuh variabel Material lagi karena kita main hide/show object
-    // public Material nightVisionMaterial; 
+    // --- TAMBAHAN BARU ---
+    [Header("Settings")]
+    // Drag & Drop Directional Light Anda ke slot ini di Inspector
+    public Light directionalLight;
+    // ---------------------
 
-    // List untuk menyimpan referensi GameObject itu sendiri
     private List<GameObject> hiddenObjects = new List<GameObject>();
-
     private bool isNightVisionActive = false;
 
     void Start()
     {
-        // Cari semua objek dengan tag "HiddenObject"
+        // 1. Logika Mencari Hidden Objects
         GameObject[] targets = GameObject.FindGameObjectsWithTag("HiddenObject");
 
         foreach (GameObject go in targets)
         {
-            // Masukkan ke dalam list
             hiddenObjects.Add(go);
-
-            // PENTING: Matikan (hide) objek saat game baru mulai
-            // Jadi default-nya tidak terlihat
+            // Default: Hidden Objects tidak terlihat
             go.SetActive(false);
+        }
+
+        // 2. Logika Directional Light Awal
+        // Pastikan lampu menyala saat awal game
+        if (directionalLight != null)
+        {
+            directionalLight.enabled = true;
+        }
+        else
+        {
+            Debug.LogWarning("Directional Light belum dimasukkan ke script di Inspector!");
         }
     }
 
     void Update()
     {
-        // Cek apakah keyboard ada dan tombol N ditekan (sesuai request)
-        // Sebelumnya script Anda menggunakan 'qKey', sekarang diganti 'nKey'
+        // Catatan: Script Anda menggunakan 'qKey'. 
+        // Jika ingin sesuai komentar (tombol N), ganti 'qKey' menjadi 'nKey'.
         if (Keyboard.current != null && Keyboard.current.qKey.wasPressedThisFrame)
         {
             ToggleNightVision();
@@ -43,15 +52,23 @@ public class NightVisionController : MonoBehaviour
         // Ubah status true/false
         isNightVisionActive = !isNightVisionActive;
 
-        // Loop semua objek yang sudah didaftarkan
+        // --- UPDATE OBJEK RAHASIA ---
         foreach (GameObject go in hiddenObjects)
         {
             if (go != null)
             {
-                // SetActive true = Muncul
-                // SetActive false = Hilang
+                // Jika NV Aktif -> Objek Muncul
                 go.SetActive(isNightVisionActive);
             }
+        }
+
+        // --- UPDATE DIRECTIONAL LIGHT ---
+        if (directionalLight != null)
+        {
+            // Logika terbalik:
+            // Jika NV Aktif (true) -> Lampu Mati (false)
+            // Jika NV Mati (false) -> Lampu Nyala (true)
+            directionalLight.enabled = !isNightVisionActive;
         }
     }
 }
