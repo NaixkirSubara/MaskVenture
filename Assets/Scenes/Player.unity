@@ -717,10 +717,26 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1295922871}
+    - target: {fileID: 462228350128332630, guid: 70d592d3e0ec58e41b6a883c0ce5b61c, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 884038774766411728, guid: 70d592d3e0ec58e41b6a883c0ce5b61c, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3986359546798690352, guid: 70d592d3e0ec58e41b6a883c0ce5b61c, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1295922871}
+    - target: {fileID: 4674979285972026689, guid: 70d592d3e0ec58e41b6a883c0ce5b61c, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7299945750131907189, guid: 70d592d3e0ec58e41b6a883c0ce5b61c, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8035142202305091644, guid: 70d592d3e0ec58e41b6a883c0ce5b61c, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -728,6 +744,10 @@ PrefabInstance:
     - target: {fileID: 8485875153941562523, guid: 70d592d3e0ec58e41b6a883c0ce5b61c, type: 3}
       propertyPath: m_Name
       value: Pause
+      objectReference: {fileID: 0}
+    - target: {fileID: 8767789954421849820, guid: 70d592d3e0ec58e41b6a883c0ce5b61c, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9151754667525601099, guid: 70d592d3e0ec58e41b6a883c0ce5b61c, type: 3}
       propertyPath: m_Pivot.x
@@ -807,6 +827,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9151754667525601099, guid: 70d592d3e0ec58e41b6a883c0ce5b61c, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9197357223595888343, guid: 70d592d3e0ec58e41b6a883c0ce5b61c, type: 3}
+      propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
