@@ -17,11 +17,15 @@ public class Enemy : MonoBehaviour
     [SerializeField] private float chaseSpeed = 5f;
     private bool isChasing;
 
-    private bool hasHitPlayer = false; // <--- flag supaya cuma hit 1x
+    private bool hasHitPlayer = false;
+
+    private Vector3 startPosition; // 🔥 posisi awal enemy
 
     private void Start()
     {
         agent = GetComponent<NavMeshAgent>();
+
+        startPosition = transform.position; // simpan posisi awal
 
         GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
         if (playerObj == null)
@@ -44,30 +48,30 @@ public class Enemy : MonoBehaviour
 
         float distance = Vector3.Distance(transform.position, player.position);
 
+        // ===== CHASE PLAYER =====
         if (distance <= detectionRange)
         {
-            if (!isChasing)
-            {
-                isChasing = true;
-                agent.speed = chaseSpeed;
-            }
+            isChasing = true;
+            agent.speed = chaseSpeed;
             agent.SetDestination(player.position);
+            return;
         }
-        else
-        {
-            if (isChasing)
-            {
-                isChasing = false;
-                agent.speed = patrolSpeed;
-                SetNextPatrolDestination();
-            }
 
-            if (!isWaiting && patrolPoints.Length > 0)
+        // ===== KELUAR JARAK → BALIK KE POS AWAL =====
+        if (isChasing)
+        {
+            isChasing = false;
+            agent.speed = patrolSpeed;
+            agent.SetDestination(startPosition);
+            return;
+        }
+
+        // ===== PATROL SETELAH SAMPAI =====
+        if (!isWaiting && patrolPoints.Length > 0)
+        {
+            if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
             {
-                if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
-                {
-                    StartCoroutine(WaitAtPatrolPoint());
-                }
+                StartCoroutine(WaitAtPatrolPoint());
             }
         }
     }
@@ -98,16 +102,16 @@ public class Enemy : MonoBehaviour
     // ===== SENTUH PLAYER → DAMAGE + ENEMY HANCUR =====
     private void OnTriggerEnter(Collider other)
     {
-        if (hasHitPlayer) return; // <--- hanya hit 1x
+        if (hasHitPlayer) return;
         if (!other.CompareTag("Player")) return;
 
         PlayerHealth playerHealth = other.GetComponent<PlayerHealth>();
         if (playerHealth != null)
         {
-            playerHealth.TakeDamage(); // Kurangi 1 nyawa
+            playerHealth.TakeDamage();
         }
 
-        hasHitPlayer = true; // tandai sudah hit
+        hasHitPlayer = true;
         Destroy(gameObject);
     }
 
