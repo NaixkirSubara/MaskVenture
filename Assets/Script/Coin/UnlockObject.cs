@@ -9,7 +9,7 @@ public class UnlockObject : MonoBehaviour
     {
         if (currentCoin >= requiredCoin)
         {
-            objectToUnlock.SetActive(false);
+            objectToUnlock.SetActive(true);
         }
     }
 }
