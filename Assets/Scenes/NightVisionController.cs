@@ -4,71 +4,114 @@ using UnityEngine.InputSystem;
 
 public class NightVisionController : MonoBehaviour
 {
-    // --- TAMBAHAN BARU ---
     [Header("Settings")]
-    // Drag & Drop Directional Light Anda ke slot ini di Inspector
     public Light directionalLight;
-    // ---------------------
+    public float activeDuration = 10f; // Durasi menyala setiap kali aktif
+    public float cooldownTime = 5f;    // Waktu tunggu sebelum bisa dipakai lagi
 
+    [Header("Status (Read Only)")]
+    public bool isNightVisionActive = false;
+    public bool isReadyToUse = true;
+    private float timer = 0f;
+
+    // --- VARIABEL INTERNAL ---
     private List<GameObject> hiddenObjects = new List<GameObject>();
-    private bool isNightVisionActive = false;
+    private Material defaultSkybox;
+    private Color defaultAmbientColor;
 
     void Start()
     {
-        // 1. Logika Mencari Hidden Objects
-        GameObject[] targets = GameObject.FindGameObjectsWithTag("HiddenObject");
+        defaultSkybox = RenderSettings.skybox;
+        defaultAmbientColor = RenderSettings.ambientLight;
 
+        GameObject[] targets = GameObject.FindGameObjectsWithTag("HiddenObject");
         foreach (GameObject go in targets)
         {
             hiddenObjects.Add(go);
-            // Default: Hidden Objects tidak terlihat
             go.SetActive(false);
-        }
-
-        // 2. Logika Directional Light Awal
-        // Pastikan lampu menyala saat awal game
-        if (directionalLight != null)
-        {
-            directionalLight.enabled = true;
-        }
-        else
-        {
-            Debug.LogWarning("Directional Light belum dimasukkan ke script di Inspector!");
         }
     }
 
     void Update()
     {
-        // Catatan: Script Anda menggunakan 'qKey'. 
-        // Jika ingin sesuai komentar (tombol N), ganti 'qKey' menjadi 'nKey'.
+        // 1. Input untuk Mengaktifkan (Hanya bisa jika Ready)
         if (Keyboard.current != null && Keyboard.current.qKey.wasPressedThisFrame)
         {
-            ToggleNightVision();
-        }
-    }
-
-    void ToggleNightVision()
-    {
-        // Ubah status true/false
-        isNightVisionActive = !isNightVisionActive;
-
-        // --- UPDATE OBJEK RAHASIA ---
-        foreach (GameObject go in hiddenObjects)
-        {
-            if (go != null)
+            if (!isNightVisionActive && isReadyToUse)
             {
-                // Jika NV Aktif -> Objek Muncul
-                go.SetActive(isNightVisionActive);
+                ActivateNightVision();
+            }
+            else if (isNightVisionActive)
+            {
+                // Jika ingin bisa mematikan manual sebelum waktu habis
+                DeactivateNightVision();
             }
         }
 
-        // --- UPDATE DIRECTIONAL LIGHT ---
+        // 2. Logika Hitung Mundur saat Aktif
+        if (isNightVisionActive)
+        {
+            timer -= Time.deltaTime;
+            if (timer <= 0)
+            {
+                DeactivateNightVision();
+            }
+        }
+
+        // 3. Logika Cooldown (Reset Kembali)
+        if (!isNightVisionActive && !isReadyToUse)
+        {
+            timer += Time.deltaTime;
+            if (timer >= cooldownTime)
+            {
+                isReadyToUse = true;
+                timer = 0; // Reset timer untuk penggunaan berikutnya
+                Debug.Log("Night Vision Ready!");
+            }
+        }
+    }
+
+    void ActivateNightVision()
+    {
+        isNightVisionActive = true;
+        isReadyToUse = false;
+        timer = activeDuration; // <--- RESET WAKTU KE PENUH
+        ApplyVisuals(true);
+    }
+
+    void DeactivateNightVision()
+    {
+        isNightVisionActive = false;
+        timer = 0; // Mulai hitung cooldown dari 0
+        ApplyVisuals(false);
+    }
+
+    void ApplyVisuals(bool state)
+    {
+        // Toggle Objek Rahasia
+        foreach (GameObject go in hiddenObjects)
+        {
+            if (go != null) go.SetActive(state);
+        }
+
+        // Toggle Directional Light
         if (directionalLight != null)
         {
-            // Logika terbalik:
-            // Jika NV Aktif (true) -> Lampu Mati (false)
-            // Jika NV Mati (false) -> Lampu Nyala (true)
-            directionalLight.enabled = !isNightVisionActive;
+            directionalLight.enabled = !state;
         }
+
+        // Toggle Skybox & Ambient
+        if (state)
+        {
+            RenderSettings.skybox = null;
+            RenderSettings.ambientLight = Color.black;
+        }
+        else
+        {
+            RenderSettings.skybox = defaultSkybox;
+            RenderSettings.ambientLight = defaultAmbientColor;
+        }
+
+        DynamicGI.UpdateEnvironment();
     }
 }
