@@ -7,32 +7,32 @@ public class PlayerHealth : MonoBehaviour
     public int currentLives;
 
     [Header("Damage Feedback")]
-    public AudioSource audioSource;
-    public AudioClip hitSFX;
+    public AudioClip hitSFX;   // ⬅️ cukup AudioClip saja
 
     [Header("UI")]
-    public PlayerHealthUI healthUI; // <--- UI reference
+    public PlayerHealthUI healthUI;
 
     private bool isDead = false;
 
     void Start()
     {
         currentLives = maxLives;
+
         if (healthUI != null)
-            healthUI.UpdateLife(currentLives); // Update UI awal
+            healthUI.UpdateLife(currentLives);
     }
 
     public void TakeDamage()
     {
         if (isDead) return;
 
-        currentLives -= 1;
+        currentLives--;
         currentLives = Mathf.Clamp(currentLives, 0, maxLives);
 
-        // 🔊 Sound kena damage
-        if (audioSource != null && hitSFX != null)
+        // Play SFX lewat AudioManager
+        if (AudioManager.Instance != null && hitSFX != null)
         {
-            audioSource.PlayOneShot(hitSFX);
+            AudioManager.Instance.PlaySFX(hitSFX);
         }
 
         // Update UI
@@ -49,6 +49,6 @@ public class PlayerHealth : MonoBehaviour
     {
         isDead = true;
         Debug.Log("Player Mati");
-        // Contoh: disable movement, tampilkan GameOver UI, dll
+        // disable movement / GameOver UI
     }
 }
