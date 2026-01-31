@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.InputSystem; //  WAJIB
+using UnityEngine.InputSystem; // Input System
 
 public class GameManager : MonoBehaviour
 {
@@ -14,28 +14,53 @@ public class GameManager : MonoBehaviour
 
     private bool isPaused = false;
 
+    // ================= SINGLETON =================
     void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
+
+            SceneManager.sceneLoaded += OnSceneLoaded;
         }
-        else
-        {
-            Destroy(gameObject);
-            return;
-        }
+        
     }
 
-    void Start()
+    void OnDestroy()
     {
-        Resume();
+        SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
+    // ================= SCENE LOAD =================
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        // RESET STATE
+        Time.timeScale = 1f;
+        isPaused = false;
+
+        // Cari ulang Pause UI
+        GameObject foundPauseUI = GameObject.FindWithTag("PauseUI");
+        if (foundPauseUI != null)
+        {
+            pauseUI = foundPauseUI;
+            pauseUI.SetActive(false);
+        }
+
+        // Cari ulang movement player
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (player != null)
+        {
+            // GANTI dengan script movement kamu
+            movementScript = player.GetComponent<MonoBehaviour>();
+        }
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+    }
+
+    // ================= UPDATE =================
     void Update()
     {
-        // ESC (Keyboard) pakai Input System
         if (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame)
         {
             if (isPaused)
@@ -48,6 +73,8 @@ public class GameManager : MonoBehaviour
     // ================= PAUSE =================
     public void Pause()
     {
+        if (isPaused) return;
+
         isPaused = true;
         Time.timeScale = 0f;
 
@@ -63,6 +90,8 @@ public class GameManager : MonoBehaviour
 
     public void Resume()
     {
+        if (!isPaused) return;
+
         isPaused = false;
         Time.timeScale = 1f;
 
@@ -76,17 +105,32 @@ public class GameManager : MonoBehaviour
         Cursor.visible = false;
     }
 
-    // ================= SCENE =================
+    // ================= SCENE CONTROL =================
     public void RestartScene()
     {
         Time.timeScale = 1f;
+        isPaused = false;
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     public void LoadMainMenu()
     {
         Time.timeScale = 1f;
+        isPaused = false;
+
         SceneManager.LoadScene("MainMenu");
+    }
+
+    public void LoadSceneByName(string sceneName)
+    {
+        Time.timeScale = 1f;
+        isPaused = false;
+
+        SceneManager.LoadScene(sceneName);
     }
 
     public void QuitGame()
