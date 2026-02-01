@@ -7992,8 +7992,10 @@ MonoBehaviour:
   useDuration: 1
   activeDuration: 5
   safeDistance: 5
-  player: {fileID: 0}
+  player: {fileID: 1906062452}
   targets:
+  - {fileID: 0}
+  - {fileID: 0}
   - {fileID: 0}
   arrowUI: {fileID: 0}
 --- !u!114 &939636349
@@ -18401,7 +18403,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1557394846506428834, guid: 748936a96ce83fc4fb7986547b99cc2c, type: 3}
       propertyPath: m_Name
-      value: Capsule
+      value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 1557394846506428834, guid: 748936a96ce83fc4fb7986547b99cc2c, type: 3}
       propertyPath: m_TagString
@@ -18512,6 +18514,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84eb91d20d672f748accfee274dc8021, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
+--- !u!4 &1906062452 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5599969983934855316, guid: 748936a96ce83fc4fb7986547b99cc2c, type: 3}
+  m_PrefabInstance: {fileID: 1906062447}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1909595275
 GameObject:
   m_ObjectHideFlags: 0
