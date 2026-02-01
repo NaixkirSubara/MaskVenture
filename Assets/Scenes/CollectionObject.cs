@@ -6,6 +6,7 @@ public class CollectionObject : MonoBehaviour
     [Header("--- Konfigurasi ---")]
     public GameObject[] requiredItems;
     public GameObject objectToActivate;
+    public Animator clownAnimator;
 
     [Header("--- Tombol & Waktu ---")]
     public KeyCode actionButton = KeyCode.E;
@@ -80,6 +81,10 @@ public class CollectionObject : MonoBehaviour
         {
             objectToActivate.SetActive(true);
             Debug.Log("SUKSES: Objek Target Telah Diaktifkan!");
+            if (clownAnimator != null)
+            {
+                clownAnimator.SetTrigger("Clown");
+            }
         }
 
         // INTEGRASI: Lepas kunci setelah proses selesai
