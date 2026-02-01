@@ -20,10 +20,10 @@ public class Enemy : MonoBehaviour
 
     [Header("Audio")]
     [SerializeField] private AudioClip chaseSFX;
+    [SerializeField] private AudioSource chaseAudioSource; // 🔥 AudioSource KHUSUS
 
     private bool isChasing;
     private bool hasHitPlayer;
-    private bool isChaseSFXPlaying;
 
     private Vector3 startPosition;
 
@@ -96,27 +96,22 @@ public class Enemy : MonoBehaviour
         StopChaseSFX();
     }
 
-    // ================= AUDIO =================
+    // ================= AUDIO (AMAN) =================
     private void PlayChaseSFX()
     {
-        if (isChaseSFXPlaying) return;
-        if (AudioManager.Instance == null || chaseSFX == null) return;
+        if (chaseAudioSource == null || chaseSFX == null) return;
+        if (chaseAudioSource.isPlaying) return;
 
-        AudioSource sfx = AudioManager.Instance.sfxSource;
-        sfx.clip = chaseSFX;
-        sfx.loop = true;
-        sfx.Play();
-
-        isChaseSFXPlaying = true;
+        chaseAudioSource.clip = chaseSFX;
+        chaseAudioSource.loop = false;
+        chaseAudioSource.Play();
     }
 
     private void StopChaseSFX()
     {
-        if (!isChaseSFXPlaying) return;
-        if (AudioManager.Instance == null) return;
+        if (chaseAudioSource == null) return;
 
-        AudioManager.Instance.sfxSource.Stop();
-        isChaseSFXPlaying = false;
+        chaseAudioSource.Stop();
     }
 
     // ================= PATROL =================
@@ -156,6 +151,11 @@ public class Enemy : MonoBehaviour
         hasHitPlayer = true;
         StopChaseSFX();
         Destroy(gameObject);
+    }
+
+    private void OnDestroy()
+    {
+        StopChaseSFX();
     }
 
     private void OnDrawGizmosSelected()
