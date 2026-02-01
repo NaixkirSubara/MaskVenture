@@ -14713,7 +14713,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Coin
   coinValue: 1
-  coinSFX: {fileID: 0}
+  coinSFX: {fileID: 8300000, guid: 15897699c4d220248b9269333bf120b0, type: 3}
 --- !u!65 &1168524991
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -21452,7 +21452,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Coin
   coinValue: 1
-  coinSFX: {fileID: 0}
+  coinSFX: {fileID: 8300000, guid: 15897699c4d220248b9269333bf120b0, type: 3}
 --- !u!1 &1599563038
 GameObject:
   m_ObjectHideFlags: 0
@@ -22629,11 +22629,11 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: -1528268160328934781, guid: 2741bd8ebbd78b946878aeeb186d116f, type: 2}
   m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 0}
+  m_Resource: {fileID: 8300000, guid: a008c38a7d537934faffbb74bf565f52, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -24820,7 +24820,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Coin
   coinValue: 1
-  coinSFX: {fileID: 0}
+  coinSFX: {fileID: 8300000, guid: 15897699c4d220248b9269333bf120b0, type: 3}
 --- !u!65 &1763486062
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -30223,6 +30223,42 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 46538962499854482, guid: fa3464eb0c7af2a4e9ee3f8a46f230ff, type: 3}
+      propertyPath: chaseSFX
+      value: 
+      objectReference: {fileID: 8300000, guid: 2aba37419e65bdd41b32ae3ef4eab6c1, type: 3}
+    - target: {fileID: 722803641979415607, guid: fa3464eb0c7af2a4e9ee3f8a46f230ff, type: 3}
+      propertyPath: chaseSFX
+      value: 
+      objectReference: {fileID: 8300000, guid: 2aba37419e65bdd41b32ae3ef4eab6c1, type: 3}
+    - target: {fileID: 2721861311316987209, guid: fa3464eb0c7af2a4e9ee3f8a46f230ff, type: 3}
+      propertyPath: chaseSFX
+      value: 
+      objectReference: {fileID: 8300000, guid: 2aba37419e65bdd41b32ae3ef4eab6c1, type: 3}
+    - target: {fileID: 3185723374872407513, guid: fa3464eb0c7af2a4e9ee3f8a46f230ff, type: 3}
+      propertyPath: chaseSFX
+      value: 
+      objectReference: {fileID: 8300000, guid: 2aba37419e65bdd41b32ae3ef4eab6c1, type: 3}
+    - target: {fileID: 3397172329234496193, guid: fa3464eb0c7af2a4e9ee3f8a46f230ff, type: 3}
+      propertyPath: chaseSFX
+      value: 
+      objectReference: {fileID: 8300000, guid: 2aba37419e65bdd41b32ae3ef4eab6c1, type: 3}
+    - target: {fileID: 5970735198353009238, guid: fa3464eb0c7af2a4e9ee3f8a46f230ff, type: 3}
+      propertyPath: chaseSFX
+      value: 
+      objectReference: {fileID: 8300000, guid: 2aba37419e65bdd41b32ae3ef4eab6c1, type: 3}
+    - target: {fileID: 6628423643790584665, guid: fa3464eb0c7af2a4e9ee3f8a46f230ff, type: 3}
+      propertyPath: chaseSFX
+      value: 
+      objectReference: {fileID: 8300000, guid: 2aba37419e65bdd41b32ae3ef4eab6c1, type: 3}
+    - target: {fileID: 6982610621592473519, guid: fa3464eb0c7af2a4e9ee3f8a46f230ff, type: 3}
+      propertyPath: chaseSFX
+      value: 
+      objectReference: {fileID: 8300000, guid: 2aba37419e65bdd41b32ae3ef4eab6c1, type: 3}
+    - target: {fileID: 7327814504285692999, guid: fa3464eb0c7af2a4e9ee3f8a46f230ff, type: 3}
+      propertyPath: chaseSFX
+      value: 
+      objectReference: {fileID: 8300000, guid: 2aba37419e65bdd41b32ae3ef4eab6c1, type: 3}
     - target: {fileID: 8262902225935126072, guid: fa3464eb0c7af2a4e9ee3f8a46f230ff, type: 3}
       propertyPath: m_LocalPosition.x
       value: -19.688679

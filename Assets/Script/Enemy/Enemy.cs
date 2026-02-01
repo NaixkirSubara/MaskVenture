@@ -7,25 +7,30 @@ public class Enemy : MonoBehaviour
     private NavMeshAgent agent;
     private Transform player;
 
+    [Header("Patrol")]
     [SerializeField] private Transform[] patrolPoints;
     [SerializeField] private float patrolWaitTime = 2f;
     [SerializeField] private float patrolSpeed = 2f;
     private int currentPatrolIndex;
     private bool isWaiting;
 
+    [Header("Chase")]
     [SerializeField] private float detectionRange = 10f;
     [SerializeField] private float chaseSpeed = 5f;
+
+    [Header("Audio")]
+    [SerializeField] private AudioClip chaseSFX;
+
     private bool isChasing;
+    private bool hasHitPlayer;
+    private bool isChaseSFXPlaying;
 
-    private bool hasHitPlayer = false;
-
-    private Vector3 startPosition; // 🔥 posisi awal enemy
+    private Vector3 startPosition;
 
     private void Start()
     {
         agent = GetComponent<NavMeshAgent>();
-
-        startPosition = transform.position; // simpan posisi awal
+        startPosition = transform.position;
 
         GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
         if (playerObj == null)
@@ -34,8 +39,8 @@ public class Enemy : MonoBehaviour
             enabled = false;
             return;
         }
-        player = playerObj.transform;
 
+        player = playerObj.transform;
         agent.speed = patrolSpeed;
 
         if (patrolPoints != null && patrolPoints.Length > 0)
@@ -48,25 +53,25 @@ public class Enemy : MonoBehaviour
 
         float distance = Vector3.Distance(transform.position, player.position);
 
-        // ===== CHASE PLAYER =====
+        // ================= CHASE =================
         if (distance <= detectionRange)
         {
-            isChasing = true;
-            agent.speed = chaseSpeed;
+            if (!isChasing)
+                StartChase();
+
             agent.SetDestination(player.position);
             return;
         }
 
-        // ===== KELUAR JARAK → BALIK KE POS AWAL =====
+        // ================= STOP CHASE =================
         if (isChasing)
         {
-            isChasing = false;
-            agent.speed = patrolSpeed;
+            StopChase();
             agent.SetDestination(startPosition);
             return;
         }
 
-        // ===== PATROL SETELAH SAMPAI =====
+        // ================= PATROL =================
         if (!isWaiting && patrolPoints.Length > 0)
         {
             if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
@@ -76,6 +81,45 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    // ================= CHASE CONTROL =================
+    private void StartChase()
+    {
+        isChasing = true;
+        agent.speed = chaseSpeed;
+        PlayChaseSFX();
+    }
+
+    private void StopChase()
+    {
+        isChasing = false;
+        agent.speed = patrolSpeed;
+        StopChaseSFX();
+    }
+
+    // ================= AUDIO =================
+    private void PlayChaseSFX()
+    {
+        if (isChaseSFXPlaying) return;
+        if (AudioManager.Instance == null || chaseSFX == null) return;
+
+        AudioSource sfx = AudioManager.Instance.sfxSource;
+        sfx.clip = chaseSFX;
+        sfx.loop = true;
+        sfx.Play();
+
+        isChaseSFXPlaying = true;
+    }
+
+    private void StopChaseSFX()
+    {
+        if (!isChaseSFXPlaying) return;
+        if (AudioManager.Instance == null) return;
+
+        AudioManager.Instance.sfxSource.Stop();
+        isChaseSFXPlaying = false;
+    }
+
+    // ================= PATROL =================
     private void SetNextPatrolDestination()
     {
         if (patrolPoints.Length == 0) return;
@@ -99,7 +143,7 @@ public class Enemy : MonoBehaviour
         SetNextPatrolDestination();
     }
 
-    // ===== SENTUH PLAYER → DAMAGE + ENEMY HANCUR =====
+    // ================= HIT PLAYER =================
     private void OnTriggerEnter(Collider other)
     {
         if (hasHitPlayer) return;
@@ -107,11 +151,10 @@ public class Enemy : MonoBehaviour
 
         PlayerHealth playerHealth = other.GetComponent<PlayerHealth>();
         if (playerHealth != null)
-        {
             playerHealth.TakeDamage();
-        }
 
         hasHitPlayer = true;
+        StopChaseSFX();
         Destroy(gameObject);
     }
 
