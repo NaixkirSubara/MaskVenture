@@ -13,6 +13,7 @@ public class TrailDetector : MonoBehaviour
     public Transform player;
     public Transform[] targets;
     public RectTransform arrowUI;
+    public Animator clownAnimator;
 
     private bool isActive = false;
     private float timer = 0f;
@@ -52,7 +53,7 @@ public class TrailDetector : MonoBehaviour
 
     void HandleInput()
     {
-        if (Keyboard.current != null && Keyboard.current.vKey.wasPressedThisFrame)
+        if (Keyboard.current != null && Keyboard.current.cKey.wasPressedThisFrame)
         {
             if (isActive)
             {
@@ -70,6 +71,10 @@ public class TrailDetector : MonoBehaviour
                         if (currentDistance > safeDistance)
                         {
                             TurnOn();
+                            if (clownAnimator != null)
+                            {
+                                clownAnimator.SetTrigger("Clown");
+                            }
                         }
                         else
                         {

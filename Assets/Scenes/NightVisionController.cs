@@ -9,6 +9,9 @@ public class NightVisionController : MonoBehaviour
     public float activeDuration = 10f;
     public float cooldownTime = 5f;
 
+    [Header("Animator")]
+    public Animator clownAnimator;
+
     [Header("Status (Read Only)")]
     public bool isNightVisionActive = false;
     public bool isReadyToUse = true;
@@ -80,6 +83,11 @@ public class NightVisionController : MonoBehaviour
         isReadyToUse = false;
         timer = activeDuration;
         ApplyVisuals(true);
+
+        if (clownAnimator != null)
+        {
+            clownAnimator.SetTrigger("Clown");
+        }
     }
 
     void DeactivateNightVision()
