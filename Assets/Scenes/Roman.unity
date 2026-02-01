@@ -19841,6 +19841,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 46538962499854482, guid: fa3464eb0c7af2a4e9ee3f8a46f230ff, type: 3}
+      propertyPath: chaseSFX
+      value: 
+      objectReference: {fileID: 8300000, guid: 2aba37419e65bdd41b32ae3ef4eab6c1, type: 3}
+    - target: {fileID: 722803641979415607, guid: fa3464eb0c7af2a4e9ee3f8a46f230ff, type: 3}
+      propertyPath: chaseSFX
+      value: 
+      objectReference: {fileID: 8300000, guid: 2aba37419e65bdd41b32ae3ef4eab6c1, type: 3}
     - target: {fileID: 1488667683602982596, guid: fa3464eb0c7af2a4e9ee3f8a46f230ff, type: 3}
       propertyPath: m_Range
       value: 7.673401
@@ -19853,10 +19861,38 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: -47.04746
       objectReference: {fileID: 0}
+    - target: {fileID: 2721861311316987209, guid: fa3464eb0c7af2a4e9ee3f8a46f230ff, type: 3}
+      propertyPath: chaseSFX
+      value: 
+      objectReference: {fileID: 8300000, guid: 2aba37419e65bdd41b32ae3ef4eab6c1, type: 3}
+    - target: {fileID: 3185723374872407513, guid: fa3464eb0c7af2a4e9ee3f8a46f230ff, type: 3}
+      propertyPath: chaseSFX
+      value: 
+      objectReference: {fileID: 8300000, guid: 2aba37419e65bdd41b32ae3ef4eab6c1, type: 3}
+    - target: {fileID: 3397172329234496193, guid: fa3464eb0c7af2a4e9ee3f8a46f230ff, type: 3}
+      propertyPath: chaseSFX
+      value: 
+      objectReference: {fileID: 8300000, guid: 2aba37419e65bdd41b32ae3ef4eab6c1, type: 3}
+    - target: {fileID: 5970735198353009238, guid: fa3464eb0c7af2a4e9ee3f8a46f230ff, type: 3}
+      propertyPath: chaseSFX
+      value: 
+      objectReference: {fileID: 8300000, guid: 2aba37419e65bdd41b32ae3ef4eab6c1, type: 3}
+    - target: {fileID: 6628423643790584665, guid: fa3464eb0c7af2a4e9ee3f8a46f230ff, type: 3}
+      propertyPath: chaseSFX
+      value: 
+      objectReference: {fileID: 8300000, guid: 2aba37419e65bdd41b32ae3ef4eab6c1, type: 3}
     - target: {fileID: 6851240664783022803, guid: fa3464eb0c7af2a4e9ee3f8a46f230ff, type: 3}
       propertyPath: m_Range
       value: 6.8076324
       objectReference: {fileID: 0}
+    - target: {fileID: 6982610621592473519, guid: fa3464eb0c7af2a4e9ee3f8a46f230ff, type: 3}
+      propertyPath: chaseSFX
+      value: 
+      objectReference: {fileID: 8300000, guid: 2aba37419e65bdd41b32ae3ef4eab6c1, type: 3}
+    - target: {fileID: 7327814504285692999, guid: fa3464eb0c7af2a4e9ee3f8a46f230ff, type: 3}
+      propertyPath: chaseSFX
+      value: 
+      objectReference: {fileID: 8300000, guid: 2aba37419e65bdd41b32ae3ef4eab6c1, type: 3}
     - target: {fileID: 8262902225935126072, guid: fa3464eb0c7af2a4e9ee3f8a46f230ff, type: 3}
       propertyPath: m_LocalPosition.x
       value: 26.738987
@@ -23068,6 +23104,14 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: -36.82132
       objectReference: {fileID: 0}
+    - target: {fileID: 3870202789343752657, guid: e5785aaf4e86f7843a85a8ef69a656ea, type: 3}
+      propertyPath: coinSFX
+      value: 
+      objectReference: {fileID: 8300000, guid: 15897699c4d220248b9269333bf120b0, type: 3}
+    - target: {fileID: 4259888962119569724, guid: e5785aaf4e86f7843a85a8ef69a656ea, type: 3}
+      propertyPath: coinSFX
+      value: 
+      objectReference: {fileID: 8300000, guid: 15897699c4d220248b9269333bf120b0, type: 3}
     - target: {fileID: 4772177072428075076, guid: e5785aaf4e86f7843a85a8ef69a656ea, type: 3}
       propertyPath: m_LocalPosition.x
       value: -12.439713
@@ -23112,6 +23156,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: COin
       objectReference: {fileID: 0}
+    - target: {fileID: 5707082138720645491, guid: e5785aaf4e86f7843a85a8ef69a656ea, type: 3}
+      propertyPath: coinSFX
+      value: 
+      objectReference: {fileID: 8300000, guid: 15897699c4d220248b9269333bf120b0, type: 3}
+    - target: {fileID: 8740876935705787503, guid: e5785aaf4e86f7843a85a8ef69a656ea, type: 3}
+      propertyPath: coinSFX
+      value: 
+      objectReference: {fileID: 8300000, guid: 15897699c4d220248b9269333bf120b0, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
