@@ -16495,6 +16495,7 @@ MonoBehaviour:
   maxLives: 3
   currentLives: 0
   hitSFX: {fileID: 8300000, guid: 14f3a2795df9e514788906ddbb7aebd1, type: 3}
+  deathSFX: {fileID: 8300000, guid: b6f1a951323d4e747b5d813c2b923474, type: 3}
   healthUI: {fileID: 1240337433}
   gameOverUI: {fileID: 1846913473}
   movementScript: {fileID: 1240337434}
